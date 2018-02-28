@@ -53,12 +53,16 @@ root_path = os.path.realpath(os.path.dirname(__file__))
 tf_include = tf.sysconfig.get_include()
 tf_src_dir = os.environ["TENSORFLOW_SRC_PATH"]
 tf_includes = [tf_include, tf_src_dir]
+
+custom_includes = ['/usr/local/lib/python2.7/dist-packages/external/nsync/public/', '/usr/local/lib/python2.7/dist-packages/tensorflow/include']
+
 warp_ctc_includes = [os.path.join(root_path, '../include')]
-include_dirs = tf_includes + warp_ctc_includes
+include_dirs = tf_includes + warp_ctc_includes + custom_includes
 
 extra_compile_args = ['-std=c++11', '-fPIC']
+extra_link_args = ['-shared']
 # current tensorflow code triggers return type errors, silence those for now
-extra_compile_args += ['-Wno-return-type']
+extra_compile_args += ['-Wno-return-type','-D_GLIBCXX_USE_CXX11_ABI=0']
 
 if (enable_gpu):
     extra_compile_args += ['-DWARPCTC_ENABLE_GPU']
@@ -89,9 +93,10 @@ ext = setuptools.Extension('warpctc_tensorflow.kernels',
                            sources = lib_srcs,
                            language = 'c++',
                            include_dirs = include_dirs,
-                           library_dirs = [warp_ctc_path],
+                           library_dirs = [warp_ctc_path, '/usr/local/lib/python2.7/dist-packages/tensorflow'],
                            runtime_library_dirs = [os.path.realpath(warp_ctc_path)],
-                           libraries = ['warpctc'],
+                           libraries = ['warpctc','tensorflow_framework'],
+                           extra_link_args = extra_link_args,
                            extra_compile_args = extra_compile_args)
 
 class build_tf_ext(orig_build_ext):
