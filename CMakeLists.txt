@@ -7,7 +7,7 @@ ENDIF()
 project(ctc_release)
 
 IF (NOT APPLE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -O2")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -D_GLIBCXX_USE_CXX11_ABI=0 -fopenmp -O2 -lrt")
 ENDIF()
 
 IF (APPLE)
@@ -38,6 +38,10 @@ IF (CUDA_VERSION GREATER 7.6)
     set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -gencode arch=compute_60,code=sm_60")
     set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -gencode arch=compute_61,code=sm_61")
     set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -gencode arch=compute_62,code=sm_62")
+ENDIF()
+
+IF (CUDA_VERSION GREATER 8.0)
+    set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -gencode arch=compute_70,code=sm_70")
 ENDIF()
 
 if (NOT APPLE)
@@ -71,7 +75,7 @@ IF (WITH_GPU)
     MESSAGE(STATUS "Building shared library with GPU support")
 
     CUDA_ADD_LIBRARY(warpctc SHARED src/ctc_entrypoint.cu src/reduce.cu)
-    IF (!Torch_FOUND) 
+    IF (!Torch_FOUND)
         TARGET_LINK_LIBRARIES(warpctc ${CUDA_curand_LIBRARY})
     ENDIF()
 
@@ -157,5 +161,3 @@ ELSE()
     ENDIF()
 
 ENDIF()
-
-
