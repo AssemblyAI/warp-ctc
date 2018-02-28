@@ -42,7 +42,8 @@ make
 Otherwise, set `WARP_CTC_PATH` to wherever you have `libwarpctc.so`
 installed. If you have a GPU, you should also make sure that
 `CUDA_HOME` is set to the home cuda directory (i.e. where
-`include/cuda.h` and `lib/libcudart.so` live).
+`include/cuda.h` and `lib/libcudart.so` live). For aws base deeplearning 
+amis the use this command export CUDA_HOME=/usr/local/cuda-9.0 if using cuda9
 
 You should now be able to use `setup.py` to install the package into
 your current Python environment:
@@ -50,6 +51,9 @@ your current Python environment:
 ```bash
 python setup.py install
 ```
+To install to the local user in aws use
+
+python setup.py install --user
 
 You can run a few unit tests with `setup.py` as well if you want:
 
