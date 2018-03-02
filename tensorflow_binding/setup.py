@@ -11,10 +11,10 @@ import unittest
 from setuptools.command.build_ext import build_ext as orig_build_ext
 
 # We need to import tensorflow to find where its include directory is.
-try:
-    import tensorflow as tf
-except ImportError:
-    raise RuntimeError("Tensorflow must be installed to build the tensorflow wrapper.")
+#try:
+#    import tensorflow as tf
+#except ImportError:
+#    raise RuntimeError("Tensorflow must be installed to build the tensorflow wrapper.")
 
 if "CUDA_HOME" not in os.environ:
     print("CUDA_HOME not found in the environment so building "
